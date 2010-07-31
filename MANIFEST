@@ -2,8 +2,10 @@ Changes
 MANIFEST
 Makefile.PL
 README
+lib/Image.pm
 lib/Image/Optimizer.pm
 t/00-load.t
+t/01-image-new.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
