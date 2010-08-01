@@ -5,10 +5,11 @@ use strict;
 
 our $VERSION = '0.01';
 
-use Moose;
 use App::PNGCrush;
 use Data::Dumper;    # Debug
+use File::Basename;
 use File::Temp qw/ tempdir /;
+use Moose;
 
 has 'image' => (
     is       => 'rw',
@@ -33,6 +34,22 @@ sub _optimize_png {
     $crush->run( $self->image->path )
         or warn $! and return;
     return 1;
+}
+
+sub _optimize_jpg {
+    my ($self)   = @_;
+    my $filename = fileparse( $self->image->path );
+    my @cmd      = (
+        "jpegtran",
+        "-copy",
+        "none",
+        "-optimize",
+        "-progressive",
+        "-outfile",
+        $self->dir_out . '/' . $filename,
+        $ENV{PWD} . '/' . $self->image->path
+    );
+    return ( system(@cmd) == 0 ) ? 1 : 0;
 }
 
 sub run {
