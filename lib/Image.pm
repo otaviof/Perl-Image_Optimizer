@@ -23,11 +23,10 @@ has 'path' => (
 );
 
 has 'type' => (
-    is      => 'rw',
+    is      => 'ro',
     isa     => 'Str',
     default => sub {
         my ($self) = @_;
-        print "Debug -> self #", $self, "#\n";
         my $f = File::Type->new()
             or return;
         my $t = $f->checktype_filename( $self->path );

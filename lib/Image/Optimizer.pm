@@ -7,6 +7,8 @@ our $VERSION = '0.01';
 
 use Moose;
 use App::PNGCrush;
+use Data::Dumper;    # Debug
+use File::Temp qw/ tempdir /;
 
 has 'image' => (
     is       => 'rw',
@@ -14,20 +16,33 @@ has 'image' => (
     required => 1
 );
 
+has 'dir_out' => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => sub { return tempdir(); },
+);
+
+sub _optimize_png {
+    my ($self) = @_;
+    my $crush = App::PNGCrush->new()
+        or warn $! and return;
+    $crush->set_options(
+        ( "-d", $self->dir_out, "-brute", "1" ),
+        remove => [qw(gAMA cHRM sRGB iCCP)],
+    );
+    $crush->run( $self->image->path )
+        or warn $! and return;
+    return 1;
+}
+
 sub run {
     my ($self) = @_;
 
-    if ( $self->image->type == "image/png" ) {
-        my $crush = App::PNGCrush->new();
-        $crush->set_options( qw( -d OUT_DIR -brute 1 ),
-            remove => [qw( gAMA cHRM sRGB iCCP )], );
+    _optimize_png()
+        or return
+        if ( $self->image->type =~ /image.*png/ );
 
-        my $out_ref = $crush->run( $self->image->path )
-            or die "Error: " . $crush->error;
-
-        print "Size reduction: $out_ref->{size}%\n"
-            . "IDAT reduction: $out->{idat}%\n";
-    }
+    return $self->dir_out;
 }
 
 no Moose;

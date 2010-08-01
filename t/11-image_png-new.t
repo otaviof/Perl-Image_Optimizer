@@ -19,7 +19,10 @@ eval { $png = Image::PNG->new(); };
 ok( !$png and $@, "Should Fail, no Image object informed." );
 undef $png, $@;
 
-my $img = new Image( { path => 't/images/booking.png' } );
+my $img = Image->new( { path => 't/images/booking.png' } );
 $png = new_ok( 'Image::PNG', [ { image => $img } ] );
+
+use Image::Optimizer;
+my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 
 __END__

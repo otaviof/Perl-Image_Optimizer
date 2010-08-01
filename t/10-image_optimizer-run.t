@@ -14,6 +14,6 @@ use Image;
 my $img = new_ok( 'Image', [ { path => 't/images/1247136.gif' } ] );
 my $opt = new_ok( 'Image::Optimizer', [ { image => $img } ] );
 
-ok( $opt->run(), "Should Pass, this method exists." );
+ok( $opt->run(), "Should Pass, this method exists and return true." );
 
 __END__
