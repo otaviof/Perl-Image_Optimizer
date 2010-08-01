@@ -6,21 +6,33 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 BEGIN {
     use_ok('Image');
     use Image;
 }
 
+my @tests = (
+    { path => '', },                               # nothing
+    { path => '/tmp/' . rand(1000) . '.txt', },    # inexistent
+    { path => 't/images/1247136.gif' },            # normal git
+);
+
 my $img;
 
-eval { $img = Image->new(); };
-ok( !$img and $@, "Should Fail, no image informed ($@)." );
+foreach my $t (@tests) {
+    eval {                                         # new Image obj
+        $img = Image->new( ( $t->{path} ) ? { path => $t->{path} } : '' );
+    };
 
-( $img, $@ ) = ( undef, undef );
+    if ( !$t->{path} or !-f $t->{path} ) {
+        ok( !$img and $@, "Should Fail, no image informed ($@)." );
+    } else {
+        isa_ok( $img, 'Image' );
+    }
 
-eval { $img = Image->new( { path => '/tmp/' . rand(1000) . '.txt' } ) };
-ok( !$img and $@, "Should Fail, file don't exists. ($@)." );
+    ( $img, $@ ) = ( undef, undef );
+}
 
 __END__
