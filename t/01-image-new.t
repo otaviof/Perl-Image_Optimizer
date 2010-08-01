@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 BEGIN {
     use_ok('Image');
@@ -30,9 +30,10 @@ foreach my $t (@tests) {
         ok( !$img and $@, "Should Fail, no image informed ($@)." );
     } else {
         isa_ok( $img, 'Image' );
+        is( $img->type, "image/gif", "Should Pass, this image is a gif." );
     }
 
-    ( $img, $@ ) = ( undef, undef );
+    undef $img, $@;
 }
 
 __END__

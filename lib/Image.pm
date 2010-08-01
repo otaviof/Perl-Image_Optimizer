@@ -9,6 +9,7 @@ use strict;
 use warnings;
 
 use Moose;
+use File::Type;
 
 has 'path' => (
     is       => 'rw',
@@ -19,6 +20,19 @@ has 'path' => (
         die "No such image ($value)."
             if !-f $value;
     }
+);
+
+has 'type' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub {
+        my ($self) = @_;
+        print "Debug -> self #", $self, "#\n";
+        my $f = File::Type->new()
+            or return;
+        my $t = $f->checktype_filename( $self->path );
+        return $t;
+    },
 );
 
 no Moose;
