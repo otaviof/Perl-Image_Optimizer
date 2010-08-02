@@ -10,6 +10,8 @@ use warnings;
 
 use Moose;
 use File::Type;
+use File::Path;
+use File::Basename qw(dirname basename);
 
 has 'path' => (
     is       => 'rw',
@@ -33,6 +35,27 @@ has 'type' => (
         return $t;
     },
 );
+
+has '_basename' => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => sub {
+        my ($self) = @_;
+        return basename( $self->path );
+    },
+);
+
+sub destroy {
+    my ($self) = @_;
+    $self->unlink( $self->path )
+        or return;
+    return rmtree( dirname( $self->path ) );
+}
+
+sub unlink {
+    my ($self) = @_;
+    return unlink( $self->path );
+}
 
 1;
 
