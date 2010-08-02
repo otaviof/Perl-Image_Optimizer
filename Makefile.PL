@@ -6,7 +6,7 @@ WriteMakefile(
     NAME          => 'Image::Optimizer',
     AUTHOR        => q{Otavio Fernandes <otaviof@gmail.com>},
     VERSION_FROM  => 'lib/Image/Optimizer.pm',
-    ABSTRACT_FROM => 'lib/Image/Optimizer.pm',
+    ABSTRACT_FROM => '',
     ( $ExtUtils::MakeMaker::VERSION >= 6.3002
         ? ( 'LICENSE' => 'perl' )
         : () ),

@@ -14,11 +14,12 @@ use Image;
 
 my $base_dir  = 't/images/';
 my $file_name = 'booking.png';
+my $full_path = sprintf( "%s/%s/%s", $ENV{PWD}, $base_dir, $file_name );
 
-my $img = Image->new( { path => $base_dir . $file_name } )
-    or die $!;
-my $opt = Image::Optimizer->new( { image => $img } )
-    or die $!;
+print "Debug -> full_path #", $full_path, "#\n";
+
+my $img = Image->new( { path => $full_path } ) or die $!;
+my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 
 my $run = $opt->_optimize_png();
 

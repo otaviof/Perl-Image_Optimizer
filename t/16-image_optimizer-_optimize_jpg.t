@@ -13,12 +13,11 @@ use Image::Optimizer;
 use Image;
 
 my $base_dir  = "t/images/";
-my $file_name = "1247136.jpg";
+my $file_name = "1699105.jpg";
+my $full_path = sprintf( "%s/%s%s", $ENV{PWD}, $base_dir, $file_name );
 
-my $img = Image->new( { path => $base_dir . $file_name } )
-    or die $!;
-my $opt = Image::Optimizer->new( { image => $img } )
-    or die $!;
+my $img = Image->new( { path => $full_path } ) or die $!;
+my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 
 my $run = $opt->_optimize_jpg();
 
