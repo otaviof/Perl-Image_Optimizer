@@ -1,5 +1,77 @@
-Revision history for Image-Optimizer
+commit: af405980437d8993284cd74b9036f36bcbdc89b2
+Author: Tue Aug 3 15:01:35 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+	Optimize methods should return an new Image object. Improvement on other tests using Try::Tiny
+
+
+commit: dd125cf60e30d99f31ef7340c509f5be16f54eb3
+Author: Mon Aug 2 18:00:54 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Adding tests for unlink and _basename.
+
+
+commit: a26bf8554a779a4a5a8f4198c63ba2df94f90122
+Author: Mon Aug 2 15:58:39 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Improving test suite, basically.
+
+
+commit: 417e6d20738a77112788bbd3f22c92a33005419f
+Author: Mon Aug 2 00:35:00 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Adding jpegtran.
+
+
+commit: f08a0fdbcb2ce6c77f8ab49c5ed5b5a55aa3e38a
+Author: Sun Aug 1 23:31:26 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Adding a humble README and TODO files
+
+
+commit: 0e393b4e95f8aedb703ba3f5a2c4ea8e85036063
+Author: Sun Aug 1 23:23:03 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	New files in their places.
+
+
+commit: 778d3bc36acb59f2ffac205f5d46f7cbf1e334e5
+Author: Sun Aug 1 23:22:04 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	New tests for image optimization.
+
+
+commit: cc695976872d4aa0390f7936b71566d06f622756
+Author: Sun Aug 1 03:23:48 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Figuring out where plug App::Crush
+
+
+commit: 283b0b8979d96cf23e07f8a7ba76040b172077b0
+Author: Sun Aug 1 02:08:49 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	New Optimizer.pm class and testes.
+
+
+commit: 15cd228e3618fa84822b43fd46f45c0591bc1ed1
+Author: Sun Aug 1 01:32:05 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Testing new of Image class
+
+
+commit: e660e098bbea9efac561046916aec115747bfb62
+Author: Sun Aug 1 00:41:44 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Perl (module-starter) empty project.
+
 
