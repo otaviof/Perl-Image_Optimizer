@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use File::stat;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 use Image::Optimizer;
 use Image;
@@ -16,27 +16,22 @@ my $base_dir  = 't/images/';
 my $file_name = 'booking.png';
 my $full_path = sprintf( "%s/%s/%s", $ENV{PWD}, $base_dir, $file_name );
 
-print "Debug -> full_path #", $full_path, "#\n";
-
 my $img = Image->new( { path => $full_path } ) or die $!;
 my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 
 my $run = $opt->_optimize_png();
 
-ok( $run,             "Should Pass, run PNG optimization should work." );
+ok( $run, "Should Pass, run PNG optimization should work." );
+
+isa_ok( $run, 'Image', "Should Pass, this is a new image." );
+
 ok( -d $opt->dir_out, "Should Pass, output dir should exists." );
-ok( -f $opt->dir_out . '/' . $file_name,
-    "Should Pass, output file should exists."
-);
+ok( -f $run->path,    "Should Pass, output file should exists." );
 
-my $old_stat = stat( $base_dir . $file_name )           or die $!;
-my $new_stat = stat( $opt->dir_out . '/' . $file_name ) or die $!;
-
-cmp_ok( $old_stat->size, '>', $new_stat->size,
+cmp_ok( $img->_size, '>', $run->_size,
     "Should Pass, old file size is higher than newer" );
 
 # clean things up
-unlink $opt->dir_out . '/' . $file_name
-    and rmdir $opt->dir_out;
+$run->unlink;
 
 __END__

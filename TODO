@@ -1,6 +1,7 @@
 1) Improve TODO list;
 2) Include POD documentation;
 3) Imitate App::PNGcrush with jpegtran tool way;
+4) Test if "jpegtran" is installed (on the $ENV{PATH}, I mean);
 
 -- Yahoo's: ------------------------------------------------------------------
     (http://developer.yahoo.com/performance/rules.html#opt_images)

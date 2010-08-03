@@ -23,18 +23,12 @@ my $run = $opt->_optimize_jpg();
 
 ok( $run, "Should Pass, run JPG (jpegtran) optimization should work." );
 ok( -d $opt->dir_out, "Should Pass, output dir should exists." );
-ok( -f $opt->dir_out . '/' . $file_name,
-    "Should Pass, output file should exists."
-);
+ok( -f $run->path,    "Should Pass, output file should exists." );
 
-my $old_stat = stat( $base_dir . $file_name )           or die $!;
-my $new_stat = stat( $opt->dir_out . '/' . $file_name ) or die $!;
-
-cmp_ok( $old_stat->size, '>', $new_stat->size,
+cmp_ok( $img->_size, '>', $run->_size,
     "Should Pass, old file size is higher than newer" );
 
 # clean things up
-unlink $opt->dir_out . '/' . $file_name
-    and rmdir $opt->dir_out;
+$run->unlink() or warn "Error on unlink ($run)";
 
 __END__

@@ -8,6 +8,7 @@ our $VERSION = '0.01';
 use App::PNGCrush;
 use File::Basename;
 use File::Temp qw(tempdir);
+use Image;
 use Moose;
 
 has 'image' => (
@@ -19,7 +20,7 @@ has 'image' => (
 has 'dir_out' => (
     is      => 'ro',
     isa     => 'Str',
-    default => sub { return tempdir(); },
+    default => sub { return tempdir( DIR => "/tmp" ); },
 );
 
 sub _optimize_png {
@@ -29,18 +30,20 @@ sub _optimize_png {
         ( "-d", $self->dir_out, "-rem", "alla", "-brute", "1" ),
         remove => [qw(gAMA cHRM sRGB iCCP)], );
     $crush->run( $self->image->path ) or warn $! and return;
-    return 1;
+    return Image->new(
+        { path => $self->dir_out . '/' . $self->image->_basename } );
 }
 
 sub _optimize_jpg {
     my ($self) = @_;
-    my $filename = fileparse( $self->{image}->{path} ) or return;
     my @cmd = (
         "jpegtran", "-copy", "none", "-optimize", "-perfect", "-outfile",
-        $self->{dir_out} . '/' . $filename,
-        $self->{image}->{path},
+        $self->dir_out . '/' . $self->image->_basename,
+        $self->image->path,
     );
-    return ( system(@cmd) == 0 ) ? 1 : 0;
+    system(@cmd) == 0 or return;
+    return Image->new(
+        { path => $self->dir_out . '/' . $self->image->_basename } );
 }
 
 sub run {

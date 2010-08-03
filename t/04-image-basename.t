@@ -6,14 +6,24 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use File::stat;
+use Test::More tests => 3;
 
 use Image;
 
-my $gif = 't/images/1699112.gif';
+my $basename  = '1699112.gif';
+my $dirname   = $ENV{PWD} . '/t/images';
+my $full_path = $dirname . '/' . $basename;
 
-my $img = Image->new( { path => $gif } ) or die $!;
+my $img = Image->new( { path => $full_path } ) or die $!;
 
-cmp_ok( "1699112.gif", 'eq', $img->_basename, "Should Pass, basename must work." );
+cmp_ok( $basename, 'eq', $img->_basename,
+    "Should Pass, basename must work." );
+cmp_ok( $dirname, 'eq', $img->_dirname, "Should Pass, dirname must work." );
+
+cmp_ok(
+    ( stat($full_path) )->size, '==', $img->_size, "Should Pass, sizes
+    must be same."
+);
 
 __END__

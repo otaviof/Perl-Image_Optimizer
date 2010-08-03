@@ -8,10 +8,11 @@ package Image;
 use strict;
 use warnings;
 
-use Moose;
-use File::Type;
-use File::Path;
 use File::Basename qw(dirname basename);
+use File::Path;
+use File::Type;
+use File::stat;
+use Moose;
 
 has 'path' => (
     is       => 'rw',
@@ -27,11 +28,11 @@ has 'path' => (
 has 'type' => (
     is      => 'ro',
     isa     => 'Str',
+    lazy    => 1,
     default => sub {
-        my ($self) = @_;
         my $f = File::Type->new()
             or return;
-        my $t = $f->checktype_filename( $self->path );
+        my $t = $f->checktype_filename( $_[0]->path );
         return $t;
     },
 );
@@ -39,10 +40,22 @@ has 'type' => (
 has '_basename' => (
     is      => 'ro',
     isa     => 'Str',
-    default => sub {
-        my ($self) = @_;
-        return basename( $self->path );
-    },
+    lazy    => 1,
+    default => sub { return basename( $_[0]->path ); },
+);
+
+has '_dirname' => (
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub { return dirname( $_[0]->path ); },
+);
+
+has '_size' => (
+    is      => 'ro',
+    isa     => 'Int',
+    lazy    => 1,
+    default => sub { return ( stat( $_[0]->path ) )->size; }
 );
 
 sub destroy {
@@ -53,9 +66,11 @@ sub destroy {
 }
 
 sub unlink {
-    my ($self) = @_;
-    return unlink( $self->path );
+    return unlink( $_[0]->path );
 }
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
 
 1;
 
