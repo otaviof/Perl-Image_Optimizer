@@ -3,6 +3,10 @@
 3) Imitate App::PNGcrush with jpegtran tool way;
 4) Test if "jpegtran" is installed (on the $ENV{PATH}, I mean);
 
+---
+5) Test with all images of some type (same test many times);
+---
+
 -- Yahoo's: ------------------------------------------------------------------
     (http://developer.yahoo.com/performance/rules.html#opt_images)
 
@@ -31,8 +35,10 @@
 
     $ pngcrush image.png -rem alla -reduce -brute result.png
 
-* Run jpegtran on all your JPEGs. This tool does lossless JPEG operations such
-  as rotation and can also be used to optimize and remove comments and other
-  useless information (such as EXIF information) from your images. 
+* Run jpegtran on all your JPEGs. This tool does lossless JPEG operations
+  such as rotation and can also be used to optimize and remove comments and
+  other useless information (such as EXIF information) from your images.
 
     $ jpegtran -copy none -optimize -perfect src.jpg dest.jpg
+
+EOF

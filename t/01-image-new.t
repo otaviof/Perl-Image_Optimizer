@@ -15,7 +15,7 @@ BEGIN {
 # Image class wihout a path, should die
 try { Image->new( { path => "" } ); }
 catch {
-    like( $_, qr/No such image/, "Should Fail, there's no such empty path." );
+    like( $_, qr/No such imag/, "Should Fail, there's no such empty path." );
 };
 
 # There's a path, but the file doesn't exists

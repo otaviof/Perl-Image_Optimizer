@@ -6,8 +6,7 @@
 use strict;
 use warnings;
 
-use File::stat;
-use Test::More tests => 4;
+use Test::More tests => 3;
 
 use Image::Optimizer;
 use Image;
@@ -22,7 +21,6 @@ my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 my $run = $opt->_optimize_jpg();
 
 ok( $run, "Should Pass, run JPG (jpegtran) optimization should work." );
-ok( -d $opt->dir_out, "Should Pass, output dir should exists." );
 ok( -f $run->path,    "Should Pass, output file should exists." );
 
 cmp_ok( $img->_size, '>', $run->_size,
