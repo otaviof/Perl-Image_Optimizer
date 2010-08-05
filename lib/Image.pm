@@ -8,6 +8,7 @@ package Image;
 use strict;
 use warnings;
 
+use Carp;
 use File::Basename qw(dirname basename);
 use File::Path;
 use File::Type;
@@ -20,7 +21,8 @@ has 'path' => (
     required => 1,
     trigger  => sub {
         my ( $self, $value ) = @_;
-        die "No such image ($value)." if !-f $value;
+        croak "No such image ($value)."
+            if !-f $value;
         $self->type;
         $self->_basename;
         $self->_dirname;
