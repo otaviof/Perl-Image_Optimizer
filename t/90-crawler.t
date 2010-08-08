@@ -73,6 +73,7 @@ sub bytes_to_kilo($) {
     return sprintf( "%0.2f", $bytes / 1024 );
 }
 
+diag("\n");
 diag( "Size before:   ", bytes_to_kilo $size_before,               " kb\n" );
 diag( "Size  after: - ", bytes_to_kilo $size_after,                " kb\n" );
 diag( "####### Sum:   ", bytes_to_kilo $size_before - $size_after, " kb\n" );
