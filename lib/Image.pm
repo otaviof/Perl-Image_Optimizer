@@ -21,7 +21,7 @@ has 'path' => (
     required => 1,
     trigger  => sub {
         my ( $self, $value ) = @_;
-        croak "No such image ($value)."
+        confess "No such image ($value)."
             if !-f $value;
         $self->type;
         $self->_basename;
