@@ -1,3 +1,10 @@
+commit: 673a657a65a19270b53170a7b0e5982a326ccb38
+Author: Sun Aug 8 16:53:14 2010 +0200
+  Date: Otávio Fernandes <otaviof@gmail.com>
+
+	Adding tests with WWW::Mechanize to search and fetch images from links (t/image_urls.txt).
+
+
 commit: 279084ab402084fbe6e00f90adceb5e94d998ee4
 Author: Thu Aug 5 10:18:52 2010 +0200
   Date: Otávio Fernandes <otaviof@gmail.com>
