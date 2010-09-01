@@ -6,15 +6,19 @@ TODO
 ignore.txt
 lib/Image.pm
 lib/Image/Optimizer.pm
+t/pod.t
 t/00-load.t
 t/01-image-new.t
-t/02-image_destroy.t
-t/03-image_unlink.t
+t/02-image-destroy.t
+t/03-image-unlink.t
 t/04-image-basename.t
 t/05-image_optimizer-new.t
 t/10-image_optimizer-run.t
 t/15-image_optimizer-_optimize_png.t
 t/16-image_optimizer-_optimize_jpg.t
+t/17-image_optimizer-_optimize_gif.t
+t/90-crawler.t
+t/image_urls.txt
 t/images/1247136.gif
 t/images/1247136.jpg
 t/images/1367364.gif
@@ -43,4 +47,3 @@ t/images/1922171.gif
 t/images/804759.gif
 t/images/931410.gif
 t/images/booking.png
-t/pod.t
