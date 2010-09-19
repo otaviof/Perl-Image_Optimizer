@@ -1,3 +1,9 @@
+commit 9673b20622febfd83587b081279cf5ba6d4f0e19
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Sun Sep 19 20:45:21 2010 +0200
+
+    KISS on slurping git log to Changes file.
+
 commit debeccbb772940dacda1ed6289e05dab7a7bf319
 Author: Otavio Fernandes <otaviof@gmail.com>
 Date:   Sun Sep 19 19:44:12 2010 +0200
