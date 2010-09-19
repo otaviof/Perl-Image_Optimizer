@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use ExtUtils::MakeMaker;
-use Try::Tiny;
 
 WriteMakefile(
     NAME          => 'Image::Optimizer',
@@ -33,21 +32,15 @@ WriteMakefile(
     clean => { FILES    => 'Image-Optimizer-*' },
 );
 
-try {    # write 'Changes' file from Git
-    eval {q{use Git::Wrapper;}} or die $@;
-    my $git = new Git::Wrapper( $ENV{PWD} ) or die $!;
-    unlink 'Changes' if ( -f 'Changes' );
-    open( my $CHG, '>', 'Changes' ) or die $!;
-    foreach my $log ( $git->log ) {
-        print $CHG "commit: ", $log->id, "\n";
-        print $CHG "Author: ", $log->attr->{date},   "\n";
-        print $CHG "  Date: ", $log->attr->{author}, "\n\n";
-        print $CHG "\t", $log->message, "\n\n";
-    }
-    close($CHG);
-}
-catch {
-    warn $_;
-};
+# --
+# Git Changes
+# --
+
+my @changes = `git log` or exit;
+unlink('Changes') if ( -f 'Changes' );
+open( my $fh, '>', "Changes" )
+    or warn $! and exit;
+print $fh @changes;
+close $fh;
 
 __END__
