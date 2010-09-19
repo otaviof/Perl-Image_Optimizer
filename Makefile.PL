@@ -6,9 +6,10 @@ use Git::Wrapper;
 
 WriteMakefile(
     NAME          => 'Image::Optimizer',
-    AUTHOR        => 'Otavio Fernandes <otaviof@gmail.com>',
-    VERSION_FROM  => 'lib/Image/Optimizer.pm',
     ABSTRACT_FROM => '',
+    AUTHOR        => 'Otavio Fernandes <otaviof@gmail.com>',
+    EXE_FILES     => [ 'bin/search_and_optimize.pl', ],
+    VERSION_FROM  => 'lib/Image/Optimizer.pm',
     ( $ExtUtils::MakeMaker::VERSION >= 6.3002
         ? ( 'LICENSE' => 'perl' )
         : () ),
