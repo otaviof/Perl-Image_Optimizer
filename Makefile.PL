@@ -2,13 +2,14 @@ use strict;
 use warnings;
 
 use ExtUtils::MakeMaker;
-use Git::Wrapper;
+use Try::Tiny;
 
 WriteMakefile(
     NAME          => 'Image::Optimizer',
-    AUTHOR        => 'Otavio Fernandes <otaviof@gmail.com>',
-    VERSION_FROM  => 'lib/Image/Optimizer.pm',
     ABSTRACT_FROM => '',
+    AUTHOR        => 'Otavio Fernandes <otaviof@gmail.com>',
+    EXE_FILES     => [ 'bin/search_and_optimize.pl', ],
+    VERSION_FROM  => 'lib/Image/Optimizer.pm',
     ( $ExtUtils::MakeMaker::VERSION >= 6.3002
         ? ( 'LICENSE' => 'perl' )
         : () ),
@@ -32,23 +33,21 @@ WriteMakefile(
     clean => { FILES    => 'Image-Optimizer-*' },
 );
 
-# --
-# Writing 'Changes' file from Git
-# --
-
-use Git::Wrapper;
-
-my $git = new Git::Wrapper( $ENV{PWD} );
-
-unlink 'Changes' if ( -f 'Changes' );
-
-open( my $CHG, '>', 'Changes' ) or die $!;
-foreach my $log ( $git->log ) {
-    print $CHG "commit: ", $log->id, "\n";
-    print $CHG "Author: ", $log->attr->{date},   "\n";
-    print $CHG "  Date: ", $log->attr->{author}, "\n\n";
-    print $CHG "\t", $log->message, "\n\n";
+try {    # write 'Changes' file from Git
+    eval {q{use Git::Wrapper;}} or die $@;
+    my $git = new Git::Wrapper( $ENV{PWD} ) or die $!;
+    unlink 'Changes' if ( -f 'Changes' );
+    open( my $CHG, '>', 'Changes' ) or die $!;
+    foreach my $log ( $git->log ) {
+        print $CHG "commit: ", $log->id, "\n";
+        print $CHG "Author: ", $log->attr->{date},   "\n";
+        print $CHG "  Date: ", $log->attr->{author}, "\n\n";
+        print $CHG "\t", $log->message, "\n\n";
+    }
+    close($CHG);
 }
-close($CHG);
+catch {
+    warn $_;
+};
 
 __END__
