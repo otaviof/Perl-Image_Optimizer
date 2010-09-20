@@ -8,71 +8,51 @@
 use strict;
 use warnings;
 
-BEGIN { push @INC, q{./lib/}; }
+BEGIN {
+    push @INC, q{./lib/} if -d q{./lib/};
+}
 
-use Try::Tiny;
-use Data::Dumper;
 use Image;
 use Image::Optimizer;
 
-# ----------------------------------------------------------------------------
-#                             -- Subroutines --
-# ----------------------------------------------------------------------------
+use File::Find;
+use Number::Bytes::Human qw(format_bytes);
+use Try::Tiny;
 
-sub search_recursive ( $$$ ) {
-    my ( $path, $file_list, $search_pattern ) = @_;
-    return if ( !-d $path );
-
-    foreach my $f ( get_files_from_dir($path) ) {
-        next if ( defined $search_pattern and $f !~ $search_pattern );
-        &search_recursive( $path . '/' . $f, $file_list )
-            if ( -d $path . '/' . $f );
-        push @{$file_list}, $path . '/' . $f;
-    }
-}
-
-sub get_files_from_dir ( $ ) {
-    my ($path) = @_;
-    return if ( not defined $path );
-    my @dots;
-
-    opendir my $DIR, $path or die $!;
-    foreach ( readdir($DIR) ) {
-        push @dots, $_
-            if ( !/^\.+$/ );
-    }
-    closedir $DIR;
-
-    return (@dots);
-}
-
-# ----------------------------------------------------------------------------
-#                            -- GetOptions --
-# ----------------------------------------------------------------------------
+#
+# GetOptions
+#
 
 my $search_directory = $ARGV[0] || die "Inform the search directory.";
 
 $search_directory = $ENV{PWD} . "/" . $search_directory
     if ( $search_directory !~ /^\/.*?/ );
 
-# ----------------------------------------------------------------------------
-#                               -- Main --
-# ----------------------------------------------------------------------------
+print "Searching images on: ", $search_directory, "\n";
 
-my @image_paths;
+#
+# Searching and optimizing
+#
 
-try {    # search for image paths
-    search_recursive( $search_directory, \@image_paths,
-        qr/.*?\.(jpeg|jpg|png|gif)$/ );
+my $image_paths;
+
+try {
+    find(
+        sub {
+            push @{$image_paths}, $File::Find::name
+                if /.*?\.(jpeg|jpg|png|gif)$/i;
+        },
+        $search_directory
+    );
 }
 catch {
     die "Cannot find any image on $search_directory"
-        if ( defined $_ or $#image_paths <= 0 );
+        if ( defined $_ or $image_paths );
 };
 
 my @optimized_images;
 
-foreach my $path (@image_paths) {
+foreach my $path ( @{$image_paths} ) {
     my $img = Image->new( { path => $path } )
         or warn $! and next;
     my $opt = Image::Optimizer->new( { image => $img } )
@@ -91,21 +71,21 @@ foreach my $path (@image_paths) {
         and print "*";
 }
 
-# ----------------------------------------------------------------------------
-#                       -- Analizing the results --
-# ----------------------------------------------------------------------------
+#
+# Analizing the results
+#
 
 my ( $size_after, $size_before ) = ( 0, 0 );
 
 foreach my $img (@optimized_images) {
     $size_after  += $img->{img}->_size();
     $size_before += $img->{opt}->_size();
-    $img->{opt}->unlink() or warn $!;
+    $img->{opt}->unlink();
 }
 
 print "\n" x 2;
-print "Size     After: ", $size_after,  "\n";
-print "Size    Before: ", $size_before, "\n";
-print "Size Reduction: ", $size_after - $size_before, "\n";
+print "Size     After: ", format_bytes($size_after),  "\n";
+print "Size    Before: ", format_bytes($size_before), "\n";
+print "Size Reduction: ", format_bytes( $size_after - $size_before ), "\n";
 
 __END__
