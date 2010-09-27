@@ -34,12 +34,13 @@ print "Searching images on: ", $search_directory, "\n";
 # Searching and optimizing
 #
 
-my $image_paths;
+my @image_paths;
+my @optimized_images;
 
 try {
     find(
         sub {
-            push @{$image_paths}, $File::Find::name
+            push @image_paths, $File::Find::name
                 if /.*?\.(jpeg|jpg|png|gif)$/i;
         },
         $search_directory
@@ -47,12 +48,10 @@ try {
 }
 catch {
     die "Cannot find any image on $search_directory"
-        if ( defined $_ or $image_paths );
+        if ( defined $_ or @image_paths );
 };
 
-my @optimized_images;
-
-foreach my $path ( @{$image_paths} ) {
+foreach my $path (@image_paths) {
     my $img = Image->new( { path => $path } )
         or warn $! and next;
     my $opt = Image::Optimizer->new( { image => $img } )
