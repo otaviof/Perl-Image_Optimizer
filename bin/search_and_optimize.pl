@@ -51,15 +51,20 @@ catch {
         if ( defined $_ or @image_paths );
 };
 
-print "Found ", $#image_paths, " images on '", $search_directory, "'\n";
+print "Found ", $#image_paths, " images at '", $search_directory, "'\n";
 
 foreach my $path (@image_paths) {
-    my $img = Image->new( { path => $path } )
-        or warn $! and next;
-    my $opt = Image::Optimizer->new( { image => $img } )
-        or warn $! and next;
-    my $optimized = $opt->run()
-        or warn "Cannot create object or optimize -- $!" and next;
+    my ( $img, $opt, $optimized ) = ( undef, undef, undef );
+
+    try {
+        $img = Image->new( { path => $path } );
+        $opt = Image::Optimizer->new( { image => $img } );
+        $optimized = $opt->run();
+    }
+    catch {
+        warn "Cannot create object or optimize -- $!"
+            and next;
+    };
 
     # optimization has no good result
     if ( $optimized->_size >= $img->_size ) {
