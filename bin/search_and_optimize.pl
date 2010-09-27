@@ -51,6 +51,8 @@ catch {
         if ( defined $_ or @image_paths );
 };
 
+print "Found ", $#image_paths, " images on '", $search_directory, "'\n";
+
 foreach my $path (@image_paths) {
     my $img = Image->new( { path => $path } )
         or warn $! and next;
