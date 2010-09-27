@@ -37,8 +37,8 @@ sub _optimize_png {
     $crush->set_options(
         ( "-d", $self->dir_out, "-rem", "alla", "-brute", "1" ),
         remove => [qw(gAMA cHRM sRGB iCCP)], );
-    $crush->run( $self->image->path ) or confess $!;
-    confess "Error on PNG optimization: " . $crush->error
+    $crush->run( $self->image->path ) or carp $!;
+    carp "Error on PNG optimization: " . $crush->error
         if ( $crush->error or !-f $final_image );
     return ( Image->new( { path => $final_image } ) );
 }
@@ -54,7 +54,7 @@ sub _optimize_jpg {
             $final_image, $self->image->path,
         ]
     );
-    confess "Jpegtran Error: $output (" . $self->image->path . ")"
+    carp "Jpegtran Error: $output (" . $self->image->path . ")"
         if ( $proc->status() or !-f $final_image );
     return ( Image->new( { path => $final_image } ) );
 }
@@ -65,19 +65,19 @@ sub _optimize_gif {
     my $output_png = $self->dir_out . $self->image->_basename . '.png';
     $magick->Read( $self->image->path );
     $magick->Write($output_png);
-    confess "Error on GIF optimization" if ( !-f $output_png );
+    carp "Error on GIF optimization" if ( !-f $output_png );
     return ( Image->new( { path => $output_png } ) );
 }
 
 sub run {
     my ($self) = @_;
 
-    confess "No image object." if ( !$self->{image} );
+    carp "No image object." if ( !$self->{image} );
 
     if ( $self->image->type =~ /image.*gif/ ) {
         $self->{last_image} = $self->{image};
         $self->{image}      = $self->_optimize_gif()
-            or confess "Could not optimize Gif.";
+            or carp "Could not optimize Gif.";
         $self->{dir_out} = $self->_mk_temp_dir();
         $self->run();
     }

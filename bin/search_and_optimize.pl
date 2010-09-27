@@ -85,8 +85,8 @@ foreach my $img (@optimized_images) {
 }
 
 print "\n" x 2;
-print "Size     After: ", format_bytes($size_after),  "\n";
-print "Size    Before: ", format_bytes($size_before), "\n";
+print "Size -- Before: ", format_bytes($size_after),  "\n";
+print "Size --- After: ", format_bytes($size_before), "\n";
 print "Size Reduction: ", format_bytes( $size_after - $size_before ), "\n";
 
 __END__
