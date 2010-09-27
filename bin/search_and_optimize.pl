@@ -54,26 +54,26 @@ catch {
 print "Found ", $#image_paths, " images at '", $search_directory, "'\n";
 
 foreach my $path (@image_paths) {
-    my ( $img, $opt, $optimized ) = ( undef, undef, undef );
+    my ( $img, $opt, $end );
 
     try {
-        $img = Image->new( { path => $path } );
-        $opt = Image::Optimizer->new( { image => $img } );
-        $optimized = $opt->run();
+        $img = Image->new( { path => $path } ) or die $!;
+        $opt = Image::Optimizer->new( { image => $img } ) or die $!;
+        $end = $opt->run() or die $!;
     }
     catch {
-        warn "Cannot create object or optimize -- $!"
+        warn "Cannot create object or optimize: $_"
             and next;
     };
 
     # optimization has no good result
-    if ( $optimized->_size >= $img->_size ) {
+    if ( $end->_size >= $img->_size ) {
         print "\n(WARN) No reduction: ", $img->path, "\n";
-        $optimized->unlink or warn $!;
+        $end->unlink or warn $!;
         next;
     }
 
-    push @optimized_images, { img => $img, opt => $optimized }
+    push @optimized_images, { img => $img, opt => $end }
         and print "*";
 }
 
