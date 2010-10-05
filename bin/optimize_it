@@ -1,0 +1,68 @@
+#!/usr/bin/env perl
+
+#
+#  Author: Otavio Fernandes <otaviof@gmail.com>
+# Created: 10/05/2010 20:26:04
+#
+
+use strict;
+use warnings;
+
+BEGIN {
+    my $lib_dir = './lib/';
+    push @INC, $lib_dir if -d $lib_dir;
+}
+
+use Benchmark;
+use Getopt::Long;
+use Image::Optimizer;
+use Image;
+use Number::Bytes::Human qw(format_bytes);
+
+#
+# Parsing Options
+#
+
+my $output;
+my $result = GetOptions( "out=s", \$output ) or die $!;
+my $optimize_it = $ARGV[$#$ARGV] || undef;
+
+die "You need to inform an valid image file."
+    if ( not -f $optimize_it );
+
+#
+# Optimizing it
+#
+
+my $t0   = Benchmark->new();
+my $img  = Image->new( { path => $optimize_it } ) or die $!;
+my $opt  = Image::Optimizer->new( { image => $img } ) or die $!;
+my $end  = $opt->run() or die $!;
+my $less = $img->_size - $end->_size;
+my $t1   = Benchmark->new();
+
+if ( not $less ) {
+    warn "No good results (", $less, "): ", $img->path;
+    $end->unlink or warn $!;
+    exit;
+}
+
+#
+# Saving in the right place
+#
+
+if ( not defined $output ) {
+    $output = $img->path . '.optimized';
+} elsif ( -d $output ) {
+    $output = $output . '/' . $end->_basename;
+} elsif ( -f $output ) {
+    die "File exists: " . $output;
+}
+
+rename $end->path, $output
+    or die $!;
+
+print "Optimized (-", format_bytes($less), "): '", $output, "'\n";
+print timestr( timediff( $t1, $t0 ) ), "\n";
+
+__END__
