@@ -9,7 +9,8 @@ use strict;
 use warnings;
 
 BEGIN {
-    push @INC, q{./lib/} if -d q{./lib/};
+    my $lib_dir = './lib/';
+    push @INC, $lib_dir if -d $lib_dir;
 }
 
 use Image;
@@ -62,8 +63,8 @@ foreach my $path (@image_paths) {
         $end = $opt->run() or die $!;
     }
     catch {
-        warn "Cannot create object or optimize: $_"
-            and next;
+        warn "Cannot create object or optimize: $_";
+        next;
     };
 
     # optimization has no good result
