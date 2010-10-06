@@ -24,10 +24,17 @@ use Try::Tiny;
 # GetOptions
 #
 
-my $search_directory = $ARGV[0] || die "Inform the search directory.";
+my $output;
+my $result = GetOptions( "out=s", \$output ) or die $!;
+my $search_directory = $ARGV[$#$ARGV] || undef;
 
 $search_directory = $ENV{PWD} . "/" . $search_directory
     if ( $search_directory !~ /^\/.*?/ );
+
+die "Please inform and valid directory for output."
+    if ( not defined $output or not -d $output );
+die "Could not find this directory '$search_directory'."
+    if ( not -d $search_directory );
 
 print "Searching images on: ", $search_directory, "\n";
 
@@ -55,27 +62,25 @@ catch {
 print "Found ", $#image_paths, " images at '", $search_directory, "'\n";
 
 foreach my $path (@image_paths) {
-    my ( $img, $opt, $end );
-
+    my ( $img, $opt, $end, $less );
     try {
         $img = Image->new( { path => $path } ) or die $!;
         $opt = Image::Optimizer->new( { image => $img } ) or die $!;
         $end = $opt->run() or die $!;
+        $less = $img->_size - $end->_size;
     }
     catch {
-        warn "Cannot create object or optimize: $_";
+        warn "Cannot create Image object or optimize: $_";
         next;
     };
 
-    # optimization has no good result
-    if ( $end->_size >= $img->_size ) {
-        print "\n(WARN) No reduction: ", $img->path, "\n";
+    if ( not $less ) {
+        print "No reduction on: '", $img->path, "'\n";
         $end->unlink or warn $!;
         next;
     }
 
-    push @optimized_images, { img => $img, opt => $end }
-        and print "*";
+    push @optimized_images, { img => $img, opt => $end, less => $less };
 }
 
 #
@@ -85,8 +90,19 @@ foreach my $path (@image_paths) {
 my ( $size_after, $size_before ) = ( 0, 0 );
 
 foreach my $img (@optimized_images) {
+    my $move_to = $output . '/' . $img->{img}->_basename;
+    $move_to .= '.' . time() if ( -f $move_to );
+
     $size_after  += $img->{img}->_size();
     $size_before += $img->{opt}->_size();
+
+    # moving to new location
+    rename $img->{opt}->path, $move_to
+        or warn $!;
+
+    print "Optimized (-", format_bytes( $img->{less} ), "): '",
+        $img->{opt}->path, "' -> '", $move_to, "'\n";
+
     $img->{opt}->unlink();
 }
 
