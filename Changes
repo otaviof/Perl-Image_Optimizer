@@ -1,18 +1,77 @@
-commit: 5e2447d6f0ad74102f40254b24b98b863c71e260
-Author: Wed Sep 1 15:46:01 2010 +0200
-  Date: Otavio Fernandes <otaviof@gmail.com>
+commit ec615a39ab3750a3d70e72f2f1dffdf2b416f5e6
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Wed Oct 6 14:40:58 2010 +0200
 
-	Updating Changes and MANIFEST
+    Trying another approach.
 
+commit 179434ae7842376165c92b31f3518b7535984569
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Tue Oct 5 21:13:57 2010 +0200
 
-commit: ee921aae51e8c7e2101ed9f04494aadd2af85f99
-Author: Sun Aug 8 17:55:48 2010 +0200
-  Date: Otávio Fernandes <otaviof@gmail.com>
+    Another script to work in CMD.
+
+commit 3875b9b187cc235b22cfca110899093b7f3fcdc6
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Tue Oct 5 20:24:46 2010 +0200
+
+    Small changes.
+
+commit 03978f63109269825cd03863986a2cf801436531
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 27 16:34:47 2010 +0200
+
+    Better try, catch and die.
+
+commit 4c95329d04019222a2e1cead4dce0aeedd5faca8
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 27 16:25:20 2010 +0200
+
+    Try and catch for new objects.
+
+commit a75c1811e954f9148a7df2cad65fbd1d13ded1a3
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 27 16:00:11 2010 +0200
+
+    Trying to use "carp" insted of "croak" (Carp).
+
+commit 910ecb096888b24db054a113233605c3d4f2b806
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 27 15:45:53 2010 +0200
+
+    Found message.
+
+commit 031df02d530786d8ca9f415c17219dc355234988
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 27 15:43:06 2010 +0200
+
+    Using an array directly.
+
+commit a3cea7a4f9da5a74f7e72a5afd1576471534fd87
+Merge: fe71adb 0b2e192
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 20 23:07:28 2010 +0200
+
+    Merge branch 'srch'
+    
+    Conflicts:
+    	Changes
+    	bin/search_and_optimize.pl
+
+commit 0b2e192ccce9502459041a3cb008cb0ec38a22ae
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Mon Sep 20 23:02:32 2010 +0200
+
+    Improvements on script to search and optimize imagens on a given directory.
+
+commit dbcf97f97767f39fccc3529e5afa4dce248d5334
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Sun Sep 19 20:46:02 2010 +0200
+
+    Changes Changes
 
 commit 9673b20622febfd83587b081279cf5ba6d4f0e19
 Author: Otavio Fernandes <otaviof@gmail.com>
 Date:   Sun Sep 19 20:45:21 2010 +0200
->>>>>>> srch
 
     KISS on slurping git log to Changes file.
 
@@ -27,6 +86,12 @@ Author: Otavio Fernandes <otaviof@gmail.com>
 Date:   Sun Sep 19 19:42:29 2010 +0200
 
     Adding "die" on Git::Wrapper calls.
+
+commit fe71adb8cd7d58aaeb41c86ef0ac496d9d33ba58
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Sun Sep 19 14:34:15 2010 +0200
+
+    Creating an simple script for search and display the optimization results by given directory.
 
 commit 5e2447d6f0ad74102f40254b24b98b863c71e260
 Author: Otavio Fernandes <otaviof@gmail.com>
