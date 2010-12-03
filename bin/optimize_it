@@ -8,61 +8,88 @@
 use strict;
 use warnings;
 
-BEGIN {
-    my $lib_dir = './lib/';
-    push @INC, $lib_dir if -d $lib_dir;
-}
-
 use Benchmark;
+use Fcntl ':mode';
+use File::Type;
 use Getopt::Long;
 use Image::Optimizer;
 use Image;
 use Number::Bytes::Human qw(format_bytes);
 
-#
+# --
 # Parsing Options
 #
 
-my $output;
-my $result = GetOptions( "out=s", \$output ) or die $!;
+my $output      = "";
+my $result      = GetOptions( "out=s", \$output ) or die $!;
 my $optimize_it = $ARGV[$#$ARGV] || undef;
 
 die "You need to inform an valid image file."
-    if ( not -f $optimize_it );
+    if not defined $optimize_it or not -f $optimize_it;
 
-#
+# --
 # Optimizing it
 #
 
-my $t0   = Benchmark->new();
-my $img  = Image->new( { path => $optimize_it } ) or die $!;
+my $t0   = Benchmark->new()                           or die $!;
+my $img  = Image->new( { path => $optimize_it } )     or die $!;
 my $opt  = Image::Optimizer->new( { image => $img } ) or die $!;
-my $end  = $opt->run() or die $!;
+my $end  = $opt->run()                                or die $!;
 my $less = $img->_size - $end->_size;
 my $t1   = Benchmark->new();
 
 if ( not $less ) {
-    warn "No good results (", $less, "): ", $img->path;
+    warn "No good results (", $less, "): ", $img->path, "\n";
     $end->unlink or warn $!;
-    exit;
+    exit 0;
 }
 
-#
+# --
 # Saving in the right place
 #
 
-if ( not defined $output ) {
-    $output = $img->path . '.optimized';
-} elsif ( -d $output ) {
-    $output = $output . '/' . $end->_basename;
-} elsif ( -f $output ) {
-    die "File exists: " . $output;
+sub file_type {
+    my ($path) = @_;
+    return 'n'
+        if not defined $path
+            or not  -e $path;
+    my $ft;
+    (   $ft->[S_IFDIR], $ft->[S_IFCHR], $ft->[S_IFBLK], $ft->[S_IFREG],
+        $ft->[S_IFIFO], $ft->[S_IFLNK], $ft->[S_IFSOCK]
+    ) = ( 'd', 'c', 'b', 'f', 'p', 'l', 's' );
+    my $mode = ( lstat $path )[2] or return;
+    return $ft->[ S_IFMT($mode) ];
 }
 
-rename $end->path, $output
+# it could be worst: switch
+my $output_actions = {
+    # we don't have an output defined or it not exists
+    n => sprintf( "%s.optimized", $img->path ),
+    # it is a directory
+    d => sprintf( "%s/%s", $output, $end->_basename ),
+    # just a normal file
+    f => undef,
+};
+
+no warnings qw(uninitialized);
+
+my $dest = $output_actions->{ file_type($output) };
+
+die "Output file already exists! $dest",
+    if not defined $dest or -e $dest;
+
+# --
+# Moving files
+#
+
+rename $end->path, $dest
     or die $!;
 
-print "Optimized (-", format_bytes($less), "): '", $output, "'\n";
-print timestr( timediff( $t1, $t0 ) ), "\n";
+# --
+# Final results
+#
+
+printf "Optimized (-%s): '%s'\n", format_bytes($less), $dest;
+printf "%s\n", timestr( timediff( $t1, $t0 ) );
 
 __END__
