@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use Data::Dumper;
-use Test::More;
+use Test::More skip_all => q(No crawling for now.);
 use WWW::Mechanize::Image;
 use WWW::Mechanize;
 use File::Slurp;

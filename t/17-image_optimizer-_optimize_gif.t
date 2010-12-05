@@ -13,17 +13,17 @@ use Image;
 
 my $base_dir  = "t/images/";
 my $file_name = "1922171.gif";
-my $full_path = sprintf( "%s/%s%s", $ENV{PWD}, $base_dir, $file_name );
+my $full_path = sprintf "%s/%s%s", $ENV{PWD}, $base_dir, $file_name;
 
-my $img = Image->new( { path => $full_path } ) or die $!;
+my $img = Image->new( { path => $full_path } )       or die $!;
 my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 
-my $run = $opt->_optimize_gif();
+ok( $opt->_optimize_gif(), "Should Pass, this method must exists." );
 
-ok( $run, "Should Pass, this method must exists." );
-isa_ok( $run, "Image", "Should Pass, this method return an Image object." );
+isa_ok( $opt->image_out, "Image",
+    "Should Pass, this method return an Image object." );
 
-like( $run->type, qr/image.*png/,
+like( $opt->image_out->type, qr/image.*png/,
     "Should Pass, an optimize GIF should be a PNG." );
 
 __END__

@@ -15,18 +15,14 @@ my $base_dir  = "t/images/";
 my $file_name = "1699105.jpg";
 my $full_path = sprintf( "%s/%s%s", $ENV{PWD}, $base_dir, $file_name );
 
-my $img = Image->new( { path => $full_path } ) or die $!;
+my $img = Image->new( { path => $full_path } )       or die $!;
 my $opt = Image::Optimizer->new( { image => $img } ) or die $!;
 
-my $run = $opt->_optimize_jpg();
-
-ok( $run, "Should Pass, run JPG (jpegtran) optimization should work." );
-ok( -f $run->path,    "Should Pass, output file should exists." );
-
-cmp_ok( $img->_size, '>', $run->_size,
-    "Should Pass, old file size is higher than newer" );
+ok(    $opt->_optimize_jpg(), "Should Pass: run JPG (jpegtran) must work." );
+ok( -f $opt->image_out->path, "Should Pass, output file should exists."    );
+ok(    $opt->is_optimized,    "Should Pass: Yes, it is!"                   );
 
 # clean things up
-$run->unlink() or warn "Error on unlink ($run)";
+$opt->image_out->unlink() or warn "Error on unlink.";
 
 __END__

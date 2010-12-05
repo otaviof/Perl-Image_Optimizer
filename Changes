@@ -1,3 +1,9 @@
+commit 9b2d3e77fa415abf07351b7498e60dab076d7c2c
+Author: Otavio Fernandes <otaviof@gmail.com>
+Date:   Fri Dec 3 23:53:20 2010 +0100
+
+    Trying another approach on some parts, just refactoring in many others.
+
 commit 7f17e11b34c7c0ee48f6b85cc455e6ece9d8c2c7
 Author: Otavio Fernandes <otaviof@gmail.com>
 Date:   Tue Oct 12 14:39:17 2010 +0200
